@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import LandingPage from './pages/LandingPage.jsx';
+import ChatbotPage from './pages/ChatbotPage.jsx';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -24,8 +25,21 @@ export default function App() {
     localStorage.setItem('userName', userData.name);
   };
 
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+  };
+
   if (isLoading) {
-    return <div className="min-h-screen bg-white"></div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+          <p className="text-xl">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -33,13 +47,7 @@ export default function App() {
       {!user ? (
         <LandingPage onUserCreated={handleUserCreated} />
       ) : (
-        <div className="min-h-screen bg-gray-100 p-8">
-          <h1 className="text-4xl font-bold text-gray-800">
-            Welcome, {user.name}!
-          </h1>
-          <p className="text-gray-600 mt-2">Chat with our PC Shop assistant</p>
-          {/* Your chatbot content goes here */}
-        </div>
+        <ChatbotPage user={user} onLogout={handleLogout} />
       )}
     </>
   );
